@@ -4,6 +4,8 @@
  */
 package com.mycompany.tambo_mysql;
 
+import Resources.ButtonAnimationUtils;
+
 /**
  *
  * @author fabri
@@ -37,7 +39,6 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
-        setPreferredSize(new java.awt.Dimension(550, 600));
         setResizable(false);
 
         izquierda.setBackground(new java.awt.Color(176, 18, 129));
@@ -49,9 +50,14 @@ public class Login extends javax.swing.JFrame {
         jtxtPass.setBackground(new java.awt.Color(176, 18, 129));
         jtxtPass.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jtxtPass.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtPass.setText("Ingrese su Contraseña");
+        jtxtPass.setText("contraseña");
         jtxtPass.setToolTipText("");
         jtxtPass.setBorder(null);
+        jtxtPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtxtPassMouseClicked(evt);
+            }
+        });
         jtxtPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtxtPassActionPerformed(evt);
@@ -63,6 +69,14 @@ public class Login extends javax.swing.JFrame {
         jbtnIniciarSesion.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jbtnIniciarSesion.setForeground(new java.awt.Color(176, 18, 129));
         jbtnIniciarSesion.setText("INICIAR SESIÓN");
+        jbtnIniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jbtnIniciarSesionMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jbtnIniciarSesionMouseExited(evt);
+            }
+        });
         jbtnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtnIniciarSesionActionPerformed(evt);
@@ -74,6 +88,14 @@ public class Login extends javax.swing.JFrame {
         jbtnRegistro.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jbtnRegistro.setForeground(new java.awt.Color(176, 18, 129));
         jbtnRegistro.setText("REGISTRARME");
+        jbtnRegistro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jbtnRegistroMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jbtnRegistroMouseExited(evt);
+            }
+        });
         jbtnRegistro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtnRegistroActionPerformed(evt);
@@ -86,6 +108,11 @@ public class Login extends javax.swing.JFrame {
         jtxtEmail.setForeground(new java.awt.Color(204, 204, 204));
         jtxtEmail.setText("Ingrese su Gmail");
         jtxtEmail.setBorder(null);
+        jtxtEmail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtxtEmailMouseClicked(evt);
+            }
+        });
         izquierda.add(jtxtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 250, 50));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/images/Sprite-0002.png"))); // NOI18N
@@ -110,7 +137,7 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void jbtnRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnRegistroActionPerformed
         // TODO add your handling code here:
 
@@ -139,6 +166,43 @@ public class Login extends javax.swing.JFrame {
     private void jtxtPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtPassActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtxtPassActionPerformed
+
+    private boolean isFirstClick  = false;
+    private void jtxtEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtxtEmailMouseClicked
+        
+        if (!isFirstClick ) {
+        jtxtEmail.setText("");
+        isFirstClick  = true;
+    } 
+    }//GEN-LAST:event_jtxtEmailMouseClicked
+    private boolean isFirstClick_ = false;
+    private void jtxtPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtxtPassMouseClicked
+        if (!isFirstClick_) {
+        jtxtPass.setText("");
+        isFirstClick_ = true;
+    }
+    }//GEN-LAST:event_jtxtPassMouseClicked
+
+    private void jbtnIniciarSesionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnIniciarSesionMouseEntered
+        jbtnIniciarSesion.setBorderPainted(false);
+        jbtnIniciarSesion.setFocusPainted(false);
+        ButtonAnimationUtils.animateButtonOnMouseEnter(jbtnIniciarSesion);
+
+    }//GEN-LAST:event_jbtnIniciarSesionMouseEntered
+
+    private void jbtnIniciarSesionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnIniciarSesionMouseExited
+    ButtonAnimationUtils.resetButtonSizeOnMouseExit(jbtnIniciarSesion);    // TODO add your handling code here:
+    }//GEN-LAST:event_jbtnIniciarSesionMouseExited
+
+    private void jbtnRegistroMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnRegistroMouseEntered
+        jbtnRegistro.setBorderPainted(false);
+        jbtnRegistro.setFocusPainted(false);
+        ButtonAnimationUtils.animateButtonOnMouseEnter(jbtnRegistro);
+    }//GEN-LAST:event_jbtnRegistroMouseEntered
+
+    private void jbtnRegistroMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnRegistroMouseExited
+    ButtonAnimationUtils.resetButtonSizeOnMouseExit(jbtnRegistro);    // TODO add your handling code here:
+    }//GEN-LAST:event_jbtnRegistroMouseExited
 
     /**
      * @param args the command line arguments
