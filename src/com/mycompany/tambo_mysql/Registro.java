@@ -1,7 +1,9 @@
 
 package com.mycompany.tambo_mysql;
 import Resources.ButtonAnimationUtils;
+import Resources.TextFieldUtils;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 
 public class Registro extends javax.swing.JFrame {
 
@@ -10,6 +12,7 @@ public class Registro extends javax.swing.JFrame {
      */
     public Registro() {
         initComponents();
+        jLabel1.requestFocusInWindow();
     }
 
     /**
@@ -25,13 +28,6 @@ public class Registro extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jbtnIniciarSesion1 = new javax.swing.JButton();
         jbtnRegistrarme = new javax.swing.JButton();
-        jtxtNombre = new javax.swing.JTextPane();
-        jtxtApellido = new javax.swing.JTextPane();
-        jtxtDireccion = new javax.swing.JTextPane();
-        jtxtCelular = new javax.swing.JTextPane();
-        jtxtEmail = new javax.swing.JTextPane();
-        jtxtPass = new javax.swing.JTextPane();
-        jtxtDNI = new javax.swing.JTextPane();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
@@ -39,14 +35,28 @@ public class Registro extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JSeparator();
         jSeparator6 = new javax.swing.JSeparator();
         jSeparator7 = new javax.swing.JSeparator();
+        jtxtNombre_ = new javax.swing.JTextField();
+        jtxtDNI_ = new javax.swing.JTextField();
+        jtxtCelular_ = new javax.swing.JTextField();
+        jtxtApellido_ = new javax.swing.JTextField();
+        jtxtDireccion_ = new javax.swing.JTextField();
+        jtxtEmail_ = new javax.swing.JTextField();
+        jtxtPass_ = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("REGISTRO DE CLIENTE");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setPreferredSize(new java.awt.Dimension(550, 600));
+        setResizable(false);
 
         derecha1.setBackground(new java.awt.Color(176, 18, 129));
-        derecha1.setMinimumSize(new java.awt.Dimension(450, 750));
+        derecha1.setMinimumSize(new java.awt.Dimension(550, 600));
+        derecha1.setName(""); // NOI18N
+        derecha1.setPreferredSize(new java.awt.Dimension(550, 600));
+        derecha1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                blank(evt);
+            }
+        });
         derecha1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setBackground(new java.awt.Color(104, 17, 130));
@@ -72,7 +82,7 @@ public class Registro extends javax.swing.JFrame {
                 jbtnIniciarSesion1ActionPerformed(evt);
             }
         });
-        derecha1.add(jbtnIniciarSesion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 530, 240, 40));
+        derecha1.add(jbtnIniciarSesion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 530, 240, 40));
 
         jbtnRegistrarme.setBackground(new java.awt.Color(230, 226, 32));
         jbtnRegistrarme.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
@@ -91,94 +101,150 @@ public class Registro extends javax.swing.JFrame {
                 jbtnRegistrarmeActionPerformed(evt);
             }
         });
-        derecha1.add(jbtnRegistrarme, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 460, 240, 40));
-
-        jtxtNombre.setBackground(new java.awt.Color(176, 18, 129));
-        jtxtNombre.setBorder(null);
-        jtxtNombre.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
-        jtxtNombre.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtNombre.setText("Nombre");
-        jtxtNombre.setPreferredSize(new java.awt.Dimension(50, 50));
-        derecha1.add(jtxtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 200, 30));
-
-        jtxtApellido.setBackground(new java.awt.Color(176, 18, 129));
-        jtxtApellido.setBorder(null);
-        jtxtApellido.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
-        jtxtApellido.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtApellido.setText("Apellidos");
-        jtxtApellido.setPreferredSize(new java.awt.Dimension(50, 50));
-        derecha1.add(jtxtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 200, 30));
-
-        jtxtDireccion.setBackground(new java.awt.Color(176, 18, 129));
-        jtxtDireccion.setBorder(null);
-        jtxtDireccion.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
-        jtxtDireccion.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtDireccion.setText("Dirección");
-        jtxtDireccion.setPreferredSize(new java.awt.Dimension(50, 50));
-        derecha1.add(jtxtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 310, 200, 30));
-
-        jtxtCelular.setBackground(new java.awt.Color(176, 18, 129));
-        jtxtCelular.setBorder(null);
-        jtxtCelular.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
-        jtxtCelular.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtCelular.setText("Celular");
-        jtxtCelular.setPreferredSize(new java.awt.Dimension(50, 50));
-        derecha1.add(jtxtCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 200, 30));
-
-        jtxtEmail.setBackground(new java.awt.Color(176, 18, 129));
-        jtxtEmail.setBorder(null);
-        jtxtEmail.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
-        jtxtEmail.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtEmail.setText("Correo");
-        jtxtEmail.setPreferredSize(new java.awt.Dimension(50, 50));
-        derecha1.add(jtxtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 240, 200, 30));
-
-        jtxtPass.setBackground(new java.awt.Color(176, 18, 129));
-        jtxtPass.setBorder(null);
-        jtxtPass.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
-        jtxtPass.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtPass.setText("Contraseña");
-        jtxtPass.setPreferredSize(new java.awt.Dimension(50, 50));
-        derecha1.add(jtxtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 310, 200, 30));
-
-        jtxtDNI.setBackground(new java.awt.Color(176, 18, 129));
-        jtxtDNI.setBorder(null);
-        jtxtDNI.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
-        jtxtDNI.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtDNI.setText("Dirección");
-        jtxtDNI.setPreferredSize(new java.awt.Dimension(50, 50));
-        derecha1.add(jtxtDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 180, 200, 30));
+        derecha1.add(jbtnRegistrarme, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 460, 240, 40));
 
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
-        derecha1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 200, -1));
+        derecha1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 200, -1));
 
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
-        derecha1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 200, -1));
+        derecha1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 200, -1));
 
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
-        derecha1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 200, -1));
+        derecha1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 330, 200, -1));
 
         jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
-        derecha1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 200, -1));
+        derecha1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 390, 200, -1));
 
         jSeparator5.setForeground(new java.awt.Color(0, 0, 0));
-        derecha1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 200, -1));
+        derecha1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 210, 200, -1));
 
         jSeparator6.setForeground(new java.awt.Color(0, 0, 0));
-        derecha1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 270, 200, -1));
+        derecha1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 270, 200, -1));
 
         jSeparator7.setForeground(new java.awt.Color(0, 0, 0));
-        derecha1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 340, 200, -1));
+        derecha1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 330, 200, -1));
+
+        jtxtNombre_.setBackground(new java.awt.Color(176, 18, 129));
+        jtxtNombre_.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
+        jtxtNombre_.setForeground(new java.awt.Color(204, 204, 204));
+        jtxtNombre_.setText("Nombre");
+        jtxtNombre_.setToolTipText("Nombre");
+        jtxtNombre_.setBorder(null);
+        jtxtNombre_.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusLost(evt);
+            }
+        });
+        derecha1.add(jtxtNombre_, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 200, 30));
+
+        jtxtDNI_.setBackground(new java.awt.Color(176, 18, 129));
+        jtxtDNI_.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
+        jtxtDNI_.setForeground(new java.awt.Color(204, 204, 204));
+        jtxtDNI_.setText("DNI");
+        jtxtDNI_.setToolTipText("DNI");
+        jtxtDNI_.setBorder(null);
+        jtxtDNI_.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusLost(evt);
+            }
+        });
+        derecha1.add(jtxtDNI_, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 200, 30));
+
+        jtxtCelular_.setBackground(new java.awt.Color(176, 18, 129));
+        jtxtCelular_.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
+        jtxtCelular_.setForeground(new java.awt.Color(204, 204, 204));
+        jtxtCelular_.setText("Celular");
+        jtxtCelular_.setToolTipText("Celular");
+        jtxtCelular_.setBorder(null);
+        jtxtCelular_.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusLost(evt);
+            }
+        });
+        derecha1.add(jtxtCelular_, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 300, 200, 30));
+
+        jtxtApellido_.setBackground(new java.awt.Color(176, 18, 129));
+        jtxtApellido_.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
+        jtxtApellido_.setForeground(new java.awt.Color(204, 204, 204));
+        jtxtApellido_.setText("Apellidos");
+        jtxtApellido_.setToolTipText("Apellidos");
+        jtxtApellido_.setBorder(null);
+        jtxtApellido_.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusLost(evt);
+            }
+        });
+        derecha1.add(jtxtApellido_, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 180, 200, 30));
+
+        jtxtDireccion_.setBackground(new java.awt.Color(176, 18, 129));
+        jtxtDireccion_.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
+        jtxtDireccion_.setForeground(new java.awt.Color(204, 204, 204));
+        jtxtDireccion_.setText("Dirección");
+        jtxtDireccion_.setToolTipText("Dirección");
+        jtxtDireccion_.setBorder(null);
+        jtxtDireccion_.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusLost(evt);
+            }
+        });
+        derecha1.add(jtxtDireccion_, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 240, 200, 30));
+
+        jtxtEmail_.setBackground(new java.awt.Color(176, 18, 129));
+        jtxtEmail_.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
+        jtxtEmail_.setForeground(new java.awt.Color(204, 204, 204));
+        jtxtEmail_.setText("Correo");
+        jtxtEmail_.setToolTipText("Correo");
+        jtxtEmail_.setBorder(null);
+        jtxtEmail_.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusLost(evt);
+            }
+        });
+        derecha1.add(jtxtEmail_, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 300, 200, 30));
+
+        jtxtPass_.setBackground(new java.awt.Color(176, 18, 129));
+        jtxtPass_.setFont(new java.awt.Font("Roboto", 0, 15)); // NOI18N
+        jtxtPass_.setForeground(new java.awt.Color(204, 204, 204));
+        jtxtPass_.setText("Contraseña");
+        jtxtPass_.setToolTipText("Contraseña");
+        jtxtPass_.setBorder(null);
+        jtxtPass_.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldFocusLost(evt);
+            }
+        });
+        derecha1.add(jtxtPass_, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 360, 200, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(derecha1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+            .addComponent(derecha1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(derecha1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, Short.MAX_VALUE)
+            .addComponent(derecha1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -191,7 +257,7 @@ public class Registro extends javax.swing.JFrame {
     }//GEN-LAST:event_jbtnIniciarSesion1MouseEntered
 
     private void jbtnIniciarSesion1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnIniciarSesion1MouseExited
-        ButtonAnimationUtils.resetButtonSizeOnMouseExit((JButton) evt.getSource());    // TODO add your handling code here:
+        ButtonAnimationUtils.resetButtonSizeOnMouseExit((JButton) evt.getSource());
     }//GEN-LAST:event_jbtnIniciarSesion1MouseExited
 
     private void jbtnIniciarSesion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnIniciarSesion1ActionPerformed
@@ -210,17 +276,18 @@ public class Registro extends javax.swing.JFrame {
     }//GEN-LAST:event_jbtnRegistrarmeMouseEntered
 
     private void jbtnRegistrarmeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnRegistrarmeMouseExited
-        ButtonAnimationUtils.resetButtonSizeOnMouseExit(jbtnIniciarSesion1);    // TODO add your handling code here:
+        ButtonAnimationUtils.resetButtonSizeOnMouseExit(jbtnRegistrarme);    // TODO add your handling code here:
     }//GEN-LAST:event_jbtnRegistrarmeMouseExited
 
     private void jbtnRegistrarmeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnRegistrarmeActionPerformed
-        String DNI=this.jtxtDNI.getText();
-        String Nombre=this.jtxtNombre.getText();
-        String Apellido=this.jtxtApellido.getText();
-        String Direccion=this.jtxtDireccion.getText();
-        String Celular=this.jtxtCelular.getText();
-        String Email=this.jtxtEmail.getText();
-        String Pass=this.jtxtPass.getText();
+        String DNI=this.jtxtDNI_.getText();
+        String Nombre=this.jtxtNombre_.getText();
+        String Apellido=this.jtxtApellido_.getText();
+        String Direccion=this.jtxtDireccion_.getText();
+        String Celular=this.jtxtCelular_.getText();
+        String Email=this.jtxtEmail_.getText();
+        char[] passwordString=this.jtxtPass_.getPassword();
+        String Pass = new String(passwordString);
         
         Cliente cl=new Cliente(DNI, Nombre, Apellido, Direccion, Celular, Email, Pass);
         
@@ -228,6 +295,18 @@ public class Registro extends javax.swing.JFrame {
         
         this.dispose();
     }//GEN-LAST:event_jbtnRegistrarmeActionPerformed
+
+    private void jTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldFocusGained
+        TextFieldUtils.setupClearTextOnFirstClick((JTextField) evt.getSource());
+    }//GEN-LAST:event_jTextFieldFocusGained
+
+    private void jTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldFocusLost
+        TextFieldUtils.setupClearTextOnFirstClickOff((JTextField) evt.getSource());
+    }//GEN-LAST:event_jTextFieldFocusLost
+
+    private void blank(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_blank
+        // TODO add your handling code here:
+    }//GEN-LAST:event_blank
 
     /**
      * @param args the command line arguments
@@ -279,12 +358,12 @@ public class Registro extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JButton jbtnIniciarSesion1;
     private javax.swing.JButton jbtnRegistrarme;
-    private javax.swing.JTextPane jtxtApellido;
-    private javax.swing.JTextPane jtxtCelular;
-    private javax.swing.JTextPane jtxtDNI;
-    private javax.swing.JTextPane jtxtDireccion;
-    private javax.swing.JTextPane jtxtEmail;
-    private javax.swing.JTextPane jtxtNombre;
-    private javax.swing.JTextPane jtxtPass;
+    private javax.swing.JTextField jtxtApellido_;
+    private javax.swing.JTextField jtxtCelular_;
+    private javax.swing.JTextField jtxtDNI_;
+    private javax.swing.JTextField jtxtDireccion_;
+    private javax.swing.JTextField jtxtEmail_;
+    private javax.swing.JTextField jtxtNombre_;
+    private javax.swing.JPasswordField jtxtPass_;
     // End of variables declaration//GEN-END:variables
 }

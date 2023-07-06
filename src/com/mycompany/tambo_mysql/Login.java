@@ -5,6 +5,8 @@
 package com.mycompany.tambo_mysql;
 
 import Resources.ButtonAnimationUtils;
+import Resources.TextFieldUtils;
+import javax.swing.JTextField;
 
 /**
  *
@@ -17,6 +19,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        jLabel1.requestFocusInWindow();
     }
 
     /**
@@ -50,12 +53,15 @@ public class Login extends javax.swing.JFrame {
         jtxtPass.setBackground(new java.awt.Color(176, 18, 129));
         jtxtPass.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jtxtPass.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtPass.setText("contraseña");
-        jtxtPass.setToolTipText("");
+        jtxtPass.setText("contraseña__");
+        jtxtPass.setToolTipText("contraseña__");
         jtxtPass.setBorder(null);
-        jtxtPass.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtxtPassMouseClicked(evt);
+        jtxtPass.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                TxtFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                TxtFocusLost(evt);
             }
         });
         jtxtPass.addActionListener(new java.awt.event.ActionListener() {
@@ -106,11 +112,15 @@ public class Login extends javax.swing.JFrame {
         jtxtEmail.setBackground(new java.awt.Color(176, 18, 129));
         jtxtEmail.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jtxtEmail.setForeground(new java.awt.Color(204, 204, 204));
-        jtxtEmail.setText("Ingrese su Gmail");
+        jtxtEmail.setText("Ingrese su correo");
+        jtxtEmail.setToolTipText("Ingrese su correo");
         jtxtEmail.setBorder(null);
-        jtxtEmail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtxtEmailMouseClicked(evt);
+        jtxtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                TxtFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                TxtFocusLost(evt);
             }
         });
         izquierda.add(jtxtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 250, 50));
@@ -167,21 +177,6 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtxtPassActionPerformed
 
-    private boolean isFirstClick  = false;
-    private void jtxtEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtxtEmailMouseClicked
-        
-        if (!isFirstClick ) {
-        jtxtEmail.setText("");
-        isFirstClick  = true;
-    } 
-    }//GEN-LAST:event_jtxtEmailMouseClicked
-    private boolean isFirstClick_ = false;
-    private void jtxtPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtxtPassMouseClicked
-        if (!isFirstClick_) {
-        jtxtPass.setText("");
-        isFirstClick_ = true;
-    }
-    }//GEN-LAST:event_jtxtPassMouseClicked
 
     private void jbtnIniciarSesionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnIniciarSesionMouseEntered
         jbtnIniciarSesion.setBorderPainted(false);
@@ -203,6 +198,14 @@ public class Login extends javax.swing.JFrame {
     private void jbtnRegistroMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbtnRegistroMouseExited
     ButtonAnimationUtils.resetButtonSizeOnMouseExit(jbtnRegistro);    // TODO add your handling code here:
     }//GEN-LAST:event_jbtnRegistroMouseExited
+
+    private void TxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TxtFocusGained
+        TextFieldUtils.setupClearTextOnFirstClick((JTextField) evt.getSource());
+    }//GEN-LAST:event_TxtFocusGained
+
+    private void TxtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TxtFocusLost
+        TextFieldUtils.setupClearTextOnFirstClickOff((JTextField) evt.getSource());
+    }//GEN-LAST:event_TxtFocusLost
 
     /**
      * @param args the command line arguments

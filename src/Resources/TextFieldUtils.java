@@ -5,29 +5,20 @@
 package Resources;
 
 import javax.swing.JTextField;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
 public class TextFieldUtils {
-    public static void setupClearTextOnFirstClick(JTextField textField, String initialText) {
-        textField.setText(initialText);
-
-        textField.addFocusListener(new FocusListener() {
-            boolean isFirstClick = true;
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (isFirstClick) {
-                    textField.setText("");
-                    isFirstClick = false;
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                // No se realiza ninguna acción al perder el foco
-            }
-        });
+    public static void setupClearTextOnFirstClick(JTextField textField) {
+        if (textField.getToolTipText().equals(textField.getText())) {
+            textField.setText("");
+        }
     }
+    public static void setupClearTextOnFirstClickOff(JTextField textField) {
+        if(textField.getText().equals("")){
+                textField.setText(textField.getToolTipText());
+            }
+    }
+
 }
+
+
 
