@@ -165,28 +165,11 @@ public class Catalogo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
-        if (paginaActual > 1) {
-        paginaActual--;
-        cargarProductos();
-        }
+        cargarProductosPaginaAnterior();
     }//GEN-LAST:event_btnAnteriorActionPerformed
 
     private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
-        try (Connection con = Conexion.getConexion()) {
-            String consulta = "SELECT * FROM PRODUCTO";
-            Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = stmt.executeQuery(consulta);
-
-            int totalProductos = obtenerTotalProductos();
-            int totalPaginas = (int) Math.ceil((double) totalProductos / productosPorPagina);
-
-            if (paginaActual < totalPaginas) {
-                paginaActual++;
-                cargarProductos();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }       
+        cargarProductosPaginaSiguiente();
     }//GEN-LAST:event_btnSiguienteActionPerformed
 
     /**
@@ -254,15 +237,17 @@ public class Catalogo extends javax.swing.JFrame {
 private void cargarProductos() {
     try (Connection con = Conexion.getConexion()) {
         String consulta = "SELECT * FROM PRODUCTO";
-        Statement stmt = con.createStatement();
+        Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         ResultSet rs = stmt.executeQuery(consulta);
+        int primerProducto = (paginaActual - 1) * productosPorPagina + 1;
+        rs.absolute(primerProducto);
         int totalProductos = obtenerTotalProductos();
         int totalPaginas = (int) Math.ceil((double) totalProductos / productosPorPagina);
         int contador = 1;
         System.out.println("Total de productos: " + totalProductos);
         System.out.println("Total de páginas: " + totalPaginas);
         
-        while (rs.next() && contador <= 4) {
+        while (contador <= 4) {
             String nombre = rs.getString("Producto");
             double precio = rs.getDouble("Precio");
             ImageIcon imagen = new ImageIcon("ruta_imagenes/" + nombre + ".jpg");
@@ -289,11 +274,29 @@ private void cargarProductos() {
                     labelImagen4.setIcon(imagen);
                     break;
             }
-
+            
             contador++;
+            rs.next();
         }
+        
     } catch (SQLException e) {
         e.printStackTrace();
+    }
+}
+
+private void cargarProductosPaginaAnterior() {
+    if (paginaActual > 1) {
+        paginaActual--;
+        cargarProductos();
+    }
+}
+
+private void cargarProductosPaginaSiguiente() {
+    int totalProductos = obtenerTotalProductos();
+    int totalPaginas = (int) Math.ceil((double) totalProductos / productosPorPagina);
+    if (paginaActual < totalPaginas) {
+        paginaActual++;
+        cargarProductos();
     }
 }
 
