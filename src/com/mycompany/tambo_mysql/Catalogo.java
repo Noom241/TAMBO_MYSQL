@@ -177,7 +177,7 @@ public class Catalogo extends javax.swing.JFrame {
             Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = stmt.executeQuery(consulta);
 
-            int totalProductos = obtenerTotalProductos(rs);
+            int totalProductos = obtenerTotalProductos();
             int totalPaginas = (int) Math.ceil((double) totalProductos / productosPorPagina);
 
             if (paginaActual < totalPaginas) {
@@ -311,11 +311,6 @@ private int obtenerTotalProductos() {
     }
     return 0;
 }
-
-
-}
-
-
 
 
 }
