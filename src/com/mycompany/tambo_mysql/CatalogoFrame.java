@@ -5,13 +5,20 @@
 package com.mycompany.tambo_mysql;
 
 import Resources.Producto;
+import SQL.Conexion;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CatalogoFrame extends JFrame {
     private JPanel panelProductos;
+    private List<Producto> productos;
+    private int paginaActual;
+    private int productosPorPagina;
 
     public CatalogoFrame(List<Producto> productos) {
         // Configurar el JFrame
@@ -19,19 +26,70 @@ public class CatalogoFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
 
+        this.productos = productos;
+        this.paginaActual = 1;
+        this.productosPorPagina = 9;
+
+        // Crear un GridLayout para dividir los productos en 3 columnas
+        GridLayout gridLayout = new GridLayout(0, 3);
+        gridLayout.setHgap(10); // Espacio horizontal entre las columnas
+        gridLayout.setVgap(10); // Espacio vertical entre las filas
+
         // Crear el JPanel para mostrar los productos
-        panelProductos = new JPanel(new GridLayout(0, 3));
+        panelProductos = new JPanel(gridLayout);
 
-        // Agregar los productos al panel
-        for (Producto producto : productos) {
-            panelProductos.add(crearPanelProducto(producto));
-        }
+        // Mostrar la página actual de productos
+        mostrarPagina(paginaActual);
 
-        // Agregar el panel al JFrame
-        add(panelProductos);
+        // Crear botones de navegación
+        JButton btnPaginaAnterior = new JButton("<< Anterior");
+        JButton btnPaginaSiguiente = new JButton("Siguiente >>");
+
+        // Agregar listeners para los botones de navegación
+        btnPaginaAnterior.addActionListener(e -> {
+            if (paginaActual > 1) {
+                paginaActual--;
+                mostrarPagina(paginaActual);
+            }
+        });
+
+        btnPaginaSiguiente.addActionListener(e -> {
+            int totalPages = getTotalPaginas();
+            if (paginaActual < totalPages) {
+                paginaActual++;
+                mostrarPagina(paginaActual);
+            }
+        });
+
+        // Crear un JPanel para contener los botones de navegación
+        JPanel panelNavegacion = new JPanel();
+        panelNavegacion.add(btnPaginaAnterior);
+        panelNavegacion.add(btnPaginaSiguiente);
+
+        // Crear un JPanel principal y agregar el panel de productos y el panel de navegación
+        JPanel panelPrincipal = new JPanel(new BorderLayout());
+        panelPrincipal.add(panelProductos, BorderLayout.CENTER);
+        panelPrincipal.add(panelNavegacion, BorderLayout.SOUTH);
+
+        // Agregar el panel principal al JFrame
+        add(panelPrincipal);
 
         // Mostrar el JFrame
         setVisible(true);
+    }
+
+    private void mostrarPagina(int numeroPagina) {
+        panelProductos.removeAll();
+
+        int inicio = (numeroPagina - 1) * productosPorPagina;
+        int fin = Math.min(inicio + productosPorPagina, productos.size());
+
+        for (int i = inicio; i < fin; i++) {
+            panelProductos.add(crearPanelProducto(productos.get(i)));
+        }
+
+        panelProductos.revalidate();
+        panelProductos.repaint();
     }
 
     private JPanel crearPanelProducto(Producto producto) {
@@ -58,19 +116,38 @@ public class CatalogoFrame extends JFrame {
         return panelProducto;
     }
 
-    public static void main(String[] args) {
-        // Crear algunos productos de ejemplo
-        Producto producto1 = new Producto("Producto 1", 10.99, new ImageIcon("imagen1.jpg"));
-        Producto producto2 = new Producto("Producto 2", 19.99, new ImageIcon("imagen2.jpg"));
-        Producto producto3 = new Producto("Producto 3", 15.99, new ImageIcon("imagen3.jpg"));
+    private int getTotalPaginas() {
+        return (int) Math.ceil((double) productos.size() / productosPorPagina);
+    }
 
-        // Crear una lista de productos
-        List<Producto> productos = new ArrayList<>();
-        productos.add(producto1);
-        productos.add(producto2);
-        productos.add(producto3);
+    public static void main(String[] args) {
+        // Crear una lista de productos a partir de la base de datos
+        List<Producto> productos = obtenerProductosDesdeBD();
 
         // Crear la ventana del catálogo
         CatalogoFrame catalogoFrame = new CatalogoFrame(productos);
+    }
+
+    private static List<Producto> obtenerProductosDesdeBD() {
+        List<Producto> productos = new ArrayList<>();
+
+        try (Connection con = Conexion.getConexion()) {
+            String consulta = "SELECT * FROM PRODUCTO";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(consulta);
+
+            while (rs.next()) {
+                String nombre = rs.getString("Producto");
+                double precio = rs.getDouble("Precio");
+                ImageIcon imagen = new ImageIcon("ruta_imagenes/" + nombre + ".jpg");
+
+                Producto producto = new Producto(nombre, precio, imagen);
+                productos.add(producto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productos;
     }
 }
