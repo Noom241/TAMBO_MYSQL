@@ -7,6 +7,7 @@ package com.mycompany.tambo_mysql;
 import Resources.ButtonAnimationUtils;
 import Resources.TextFieldUtils;
 import javax.swing.JTextField;
+import Resources.CarritoCompras;
 
 /**
  *
@@ -163,10 +164,11 @@ public class Login extends javax.swing.JFrame {
 
         String Email=this.jtxtEmail.getText();
         String Pass=this.jtxtPass.getText();
-
+        
         MenuPrincipal Mp=new MenuPrincipal();
         Mp.setEmail(jtxtEmail.getText());
-
+        
+        CarritoCompras.setCorreo(jtxtEmail.getText());
         Cliente cl=new Cliente(Email, Pass);
         cl.InicioSeionDB();
         this.dispose();

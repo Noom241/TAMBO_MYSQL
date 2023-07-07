@@ -96,7 +96,7 @@ public class Cliente {
                        Login Lg=new Login();
                        Lg.setVisible(false);
                        
-                       MenuPrincipal Menu=new MenuPrincipal();
+                       Catalogo Menu=new Catalogo();
                        Menu.setVisible(true);
                        Menu.setLocationRelativeTo(null);
   
