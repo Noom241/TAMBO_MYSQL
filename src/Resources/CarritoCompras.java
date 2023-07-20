@@ -9,7 +9,9 @@ import java.util.List;
 
 public class CarritoCompras {
     private static List<String> nombresProductos = new ArrayList<>();
+    private static List<Integer> cantidadProductos = new ArrayList<>();
     private static List<Double> preciosProductos = new ArrayList<>();
+    private static List<Double> subtotales = new ArrayList<>();
     private static double total_pago;
     private static String metodoPago;
     private static String tipoEntrega;
@@ -18,6 +20,7 @@ public class CarritoCompras {
     public static void agregarProducto(String nombre, double precio) {
         nombresProductos.add(nombre);
         preciosProductos.add(precio);
+        subtotales.add(precio);
     }
 
     public static void total_precio(double total) {
@@ -39,9 +42,17 @@ public class CarritoCompras {
     public static List<String> getNombresProductos() {
         return nombresProductos;
     }
-
+    
+    public static List<Integer> getCantidadesProductos() {
+        return cantidadProductos;
+    }
+    
     public static List<Double> getPreciosProductos() {
         return preciosProductos;
+    }
+    
+    public static List<Double> getSubtotales() {
+        return subtotales;
     }
     
     public static double getTotalPrecio() {
@@ -51,7 +62,7 @@ public class CarritoCompras {
     public static String getMetodoPago() {
         return metodoPago;
     }
-
+    
     public static String getTipoEntrega() {
         return tipoEntrega;
     }

@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -218,7 +219,7 @@ public class Catalogo extends javax.swing.JFrame {
                 btn_irActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_ir, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 40, -1));
+        jPanel1.add(btn_ir, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 50, -1));
 
         jButton1.setText("Carrito");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -290,7 +291,24 @@ public class Catalogo extends javax.swing.JFrame {
     private void btn_añadir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_añadir1ActionPerformed
         String nombre = labelNombre1.getText();
         double precio = Double.parseDouble(labelPrecio1.getText());
-        CarritoCompras.agregarProducto(nombre, precio);
+        List<String> lista = CarritoCompras.getNombresProductos();
+        List<Integer> cantidades = CarritoCompras.getCantidadesProductos();
+        List<Double> Subtotales = CarritoCompras.getSubtotales();
+        if (lista.contains(nombre)) {
+            int indice = lista.indexOf(nombre);
+            int cantidad = cantidades.get(indice);
+            cantidad++;
+            cantidades.set(indice, cantidad);
+            Double subtotal = Subtotales.get(indice);
+            subtotal = subtotal + precio;
+            Subtotales.set(indice, subtotal);           
+            
+        } else {
+            CarritoCompras.agregarProducto(nombre, precio);
+            cantidades.add(1);
+            
+        }
+        
 
         // Llamar a la función para mostrar los productos en el carrito en la consola
         mostrarProductosEnCarrito();
@@ -299,8 +317,24 @@ public class Catalogo extends javax.swing.JFrame {
     private void btn_añadir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_añadir2ActionPerformed
         String nombre = labelNombre2.getText();
         double precio = Double.parseDouble(labelPrecio2.getText());
-        CarritoCompras.agregarProducto(nombre, precio);
-
+        List<String> lista = CarritoCompras.getNombresProductos();
+        List<Integer> cantidades = CarritoCompras.getCantidadesProductos();
+        List<Double> Subtotales = CarritoCompras.getSubtotales();
+        
+        if (lista.contains(nombre)) {
+            System.out.println("Ya en el carrito");
+            int indice = lista.indexOf(nombre);
+            System.out.println("Indice: " + Integer.toString(indice));
+            int cantidad = cantidades.get(indice);
+            cantidad++;
+            cantidades.set(indice, cantidad);
+            Double subtotal = Subtotales.get(indice);
+            subtotal = subtotal + precio;
+            Subtotales.set(indice, subtotal);   
+        } else {
+            CarritoCompras.agregarProducto(nombre, precio);
+            cantidades.add(1);
+        }
         // Llamar a la función para mostrar los productos en el carrito en la consola
         mostrarProductosEnCarrito();        
     }//GEN-LAST:event_btn_añadir2ActionPerformed
@@ -308,8 +342,24 @@ public class Catalogo extends javax.swing.JFrame {
     private void btn_añadir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_añadir3ActionPerformed
         String nombre = labelNombre3.getText();
         double precio = Double.parseDouble(labelPrecio3.getText());
-        CarritoCompras.agregarProducto(nombre, precio);
-
+        List<String> lista = CarritoCompras.getNombresProductos();
+        List<Integer> cantidades = CarritoCompras.getCantidadesProductos();
+        List<Double> Subtotales = CarritoCompras.getSubtotales();
+        
+        if (lista.contains(nombre)) {
+            System.out.println("Ya en el carrito");
+            int indice = lista.indexOf(nombre);
+            System.out.println("Indice: " + Integer.toString(indice));
+            int cantidad = cantidades.get(indice);
+            cantidad++;
+            cantidades.set(indice, cantidad);
+            Double subtotal = Subtotales.get(indice);
+            subtotal = subtotal + precio;
+            Subtotales.set(indice, subtotal);   
+        } else {
+            CarritoCompras.agregarProducto(nombre, precio);
+            cantidades.add(1);
+        }
         // Llamar a la función para mostrar los productos en el carrito en la consola
         mostrarProductosEnCarrito();             // TODO add your handling code here:
     }//GEN-LAST:event_btn_añadir3ActionPerformed
@@ -317,8 +367,24 @@ public class Catalogo extends javax.swing.JFrame {
     private void btn_añadir4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_añadir4ActionPerformed
         String nombre = labelNombre4.getText();
         double precio = Double.parseDouble(labelPrecio4.getText());
-        CarritoCompras.agregarProducto(nombre, precio);
-
+        List<String> lista = CarritoCompras.getNombresProductos();
+        List<Integer> cantidades = CarritoCompras.getCantidadesProductos();
+        List<Double> Subtotales = CarritoCompras.getSubtotales();
+        
+        if (lista.contains(nombre)) {
+            System.out.println("Ya en el carrito");
+            int indice = lista.indexOf(nombre);
+            System.out.println("Indice: " + Integer.toString(indice));
+            int cantidad = cantidades.get(indice);
+            cantidad++;
+            cantidades.set(indice, cantidad);
+            Double subtotal = Subtotales.get(indice);
+            subtotal = subtotal + precio;
+            Subtotales.set(indice, subtotal);   
+        } else {
+            CarritoCompras.agregarProducto(nombre, precio);
+            cantidades.add(1);
+        }  
         // Llamar a la función para mostrar los productos en el carrito en la consola
         mostrarProductosEnCarrito();              // TODO add your handling code here:
     }//GEN-LAST:event_btn_añadir4ActionPerformed

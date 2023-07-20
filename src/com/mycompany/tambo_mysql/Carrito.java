@@ -6,8 +6,11 @@ package com.mycompany.tambo_mysql;
 
 import Resources.CarritoCompras;
 import static Resources.CarritoCompras.total_precio;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -15,7 +18,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Carrito extends javax.swing.JFrame {
     List<String> nombresProductos = CarritoCompras.getNombresProductos();
+    List<Integer> cantidadesProductos = CarritoCompras.getCantidadesProductos();
     List<Double> preciosProductos = CarritoCompras.getPreciosProductos();
+    List<Double> subtotales = CarritoCompras.getSubtotales();
     
     /**
      * Creates new form Carrito
@@ -24,6 +29,7 @@ public class Carrito extends javax.swing.JFrame {
         initComponents();
         Table_Carrito.requestFocus();
         inicializarLabelDatos();
+        Table_Carrito.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
         
     }
@@ -61,13 +67,28 @@ public class Carrito extends javax.swing.JFrame {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        Table_Carrito.getTableHeader().setReorderingAllowed(false);
         Table_Carrito.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 Table_CarritoFocusGained(evt);
             }
         });
         jScrollPane1.setViewportView(Table_Carrito);
+        if (Table_Carrito.getColumnModel().getColumnCount() > 0) {
+            Table_Carrito.getColumnModel().getColumn(0).setResizable(false);
+            Table_Carrito.getColumnModel().getColumn(1).setResizable(false);
+            Table_Carrito.getColumnModel().getColumn(2).setResizable(false);
+            Table_Carrito.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
 
@@ -140,16 +161,37 @@ public class Carrito extends javax.swing.JFrame {
     // Crear el modelo de la tabla con las columnas "Producto" y "Precio"
     DefaultTableModel modeloTabla = new DefaultTableModel();
     modeloTabla.addColumn("Producto");
+    modeloTabla.addColumn("P. Unit.");
+    modeloTabla.addColumn("Cant.");
     modeloTabla.addColumn("Precio");
+    
     
     // Agregar filas con los datos de nombres y precios
     for (int i = 0; i < nombresProductos.size(); i++) {
-        Object[] fila = {nombresProductos.get(i), preciosProductos.get(i)};
+        
+        String precioFormateado = String.format("S/. %.2f", preciosProductos.get(i));
+        String subtotalFormateado = String.format("S/. %.2f", subtotales.get(i));
+        
+        
+        Object[] fila = {nombresProductos.get(i), precioFormateado, 
+                         cantidadesProductos.get(i), subtotalFormateado};
         modeloTabla.addRow(fila);
     }
     
     // Establecer el modelo en la tabla
-    Table_Carrito.setModel(modeloTabla);        // TODO add your handling code here:
+    Table_Carrito.setModel(modeloTabla);
+    
+    int[] anchos = {80,50,80};
+    
+    for (int i = 1; i<=3; i++) {
+        TableColumn columna = Table_Carrito.getColumnModel().getColumn(i);
+        columna.setMinWidth(anchos[i-1]);
+        columna.setMaxWidth(anchos[i-1]);
+        columna.setPreferredWidth(anchos[i-1]);
+    }
+
+    
+// TODO add your handling code here:
     }//GEN-LAST:event_Table_CarritoFocusGained
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -162,6 +204,7 @@ public class Carrito extends javax.swing.JFrame {
             // Eliminar el producto de las listas de nombres y precios
             nombresProductos.remove(indice);
             preciosProductos.remove(indice);
+            subtotales.remove(indice);
             
             // Actualizar el modelo de la tabla
             DefaultTableModel modeloTabla = (DefaultTableModel) Table_Carrito.getModel();
@@ -231,7 +274,7 @@ public class Carrito extends javax.swing.JFrame {
 public double total() {
     double total = 0.0;
     
-    for (double precio : preciosProductos) {
+    for (double precio : subtotales) {
         total += precio;
     }
     
@@ -267,6 +310,6 @@ public String calcularTotal(List<Double> preciosProductos) {
     // End of variables declaration//GEN-END:variables
 
     private void inicializarLabelDatos() {
-        labelTotal.setText(calcularTotal(CarritoCompras.getPreciosProductos()));
+        labelTotal.setText(calcularTotal(CarritoCompras.getSubtotales()));
     }
 }
