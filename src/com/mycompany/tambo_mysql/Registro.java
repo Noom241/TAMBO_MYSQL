@@ -2,18 +2,79 @@
 package com.mycompany.tambo_mysql;
 import Resources.ButtonAnimationUtils;
 import Resources.TextFieldUtils;
+import SQL.Conexion;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 
 public class Registro extends javax.swing.JFrame {
 
     /**
      * Creates new form Regsitro
      */
-    public Registro() {
-        initComponents();
-        jLabel1.requestFocusInWindow();
-    }
+public Registro() {
+    initComponents();
+    jLabel1.requestFocusInWindow();
+    
+    // Limitar entrada de caracteres en los campos de texto
+    jtxtApellido_.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+            if (!(Character.isLetter(c) || c == KeyEvent.VK_SPACE)) {
+                evt.consume();
+            }
+        }
+    });
+    
+    jtxtNombre_.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+            if (!(Character.isLetter(c) || c == KeyEvent.VK_SPACE)) {
+                evt.consume();
+            }
+        }
+    });
+    
+    jtxtDireccion_.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+            if (!(Character.isLetterOrDigit(c) || c == KeyEvent.VK_SPACE)) {
+                evt.consume();
+            }
+        }
+    });
+    
+    // Limitar entrada de números en los campos de texto
+    jtxtCelular_.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+            if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE) || jtxtCelular_.getText().length() >= 9) {
+                evt.consume();
+            }
+        }
+    });
+    
+    jtxtDNI_.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+            if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE) || jtxtDNI_.getText().length() >= 8) {
+                evt.consume();
+            }
+        }
+    });
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -280,20 +341,26 @@ public class Registro extends javax.swing.JFrame {
     }//GEN-LAST:event_jbtnRegistrarmeMouseExited
 
     private void jbtnRegistrarmeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnRegistrarmeActionPerformed
-        String DNI=this.jtxtDNI_.getText();
-        String Nombre=this.jtxtNombre_.getText();
-        String Apellido=this.jtxtApellido_.getText();
-        String Direccion=this.jtxtDireccion_.getText();
-        String Celular=this.jtxtCelular_.getText();
-        String Email=this.jtxtEmail_.getText();
-        char[] passwordString=this.jtxtPass_.getPassword();
+    if (verificarDatos()) {
+        String DNI = jtxtDNI_.getText();
+        String Nombre = jtxtNombre_.getText();
+        String Apellido = jtxtApellido_.getText();
+        String Direccion = jtxtDireccion_.getText();
+        String Celular = jtxtCelular_.getText();
+        String Email = jtxtEmail_.getText();
+        char[] passwordString = jtxtPass_.getPassword();
         String Pass = new String(passwordString);
-        
-        Cliente cl=new Cliente(DNI, Nombre, Apellido, Direccion, Celular, Email, Pass);
-        
+
+        Cliente cl = new Cliente(DNI, Nombre, Apellido, Direccion, Celular, Email, Pass);
         cl.RegistroDB();
-        
+
+        Login menuSiguiente = new Login();
+        menuSiguiente.setVisible(true);
+        menuSiguiente.pack();
+        menuSiguiente.setLocationRelativeTo(null); // Centra el formulario
+
         this.dispose();
+        }
     }//GEN-LAST:event_jbtnRegistrarmeActionPerformed
 
     private void jTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldFocusGained
@@ -345,6 +412,79 @@ public class Registro extends javax.swing.JFrame {
             }
         });
     }
+    
+private boolean verificarDatos() {
+    String DNI = jtxtDNI_.getText();
+    String Nombre = jtxtNombre_.getText();
+    String Apellido = jtxtApellido_.getText();
+    String Direccion = jtxtDireccion_.getText();
+    String Celular = jtxtCelular_.getText();
+    String Email = jtxtEmail_.getText();
+    char[] passwordString = jtxtPass_.getPassword();
+    String Pass = new String(passwordString);
+
+    // Verificar que todos los campos estén completos
+    if (DNI.isEmpty() || Nombre.isEmpty() || Apellido.isEmpty() || Direccion.isEmpty()
+            || Celular.isEmpty() || Email.isEmpty() || Pass.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Debes rellenar todos los campos");
+        return false;
+    }
+
+    // Verificar que el DNI tenga exactamente 8 dígitos
+    if (DNI.length() != 8) {
+        JOptionPane.showMessageDialog(null, "El DNI debe tener 8 dígitos");
+        return false;
+    }
+
+    // Verificar que el número de teléfono celular tenga exactamente 9 dígitos
+    if (Celular.length() != 9) {
+        JOptionPane.showMessageDialog(null, "El número de celular debe tener 9 dígitos");
+        return false;
+    }
+
+    // Verificar en la base de datos que no haya alguien con el mismo DNI o correo
+    boolean isDNIExist = false;
+    boolean isEmailExist = false;
+
+    try {
+        Connection con = Conexion.getConexion();
+        PreparedStatement ps = con.prepareStatement("SELECT DNI, Email FROM CLIENTE WHERE DNI = ? OR Email = ?");
+        ps.setString(1, DNI);
+        ps.setString(2, Email);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            if (rs.getString("DNI").equals(DNI)) {
+                isDNIExist = true;
+            }
+            if (rs.getString("Email").equals(Email)) {
+                isEmailExist = true;
+            }
+        }
+
+        rs.close();
+        ps.close();
+        con.close();
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Error al verificar datos en la base de datos: " + ex.toString());
+        return false;
+    }
+
+    // Verificar si el DNI o correo ya existen en la base de datos
+    if (isDNIExist) {
+        JOptionPane.showMessageDialog(null, "Ya existe un usuario con el mismo DNI");
+        return false;
+    }
+
+    if (isEmailExist) {
+        JOptionPane.showMessageDialog(null, "Ya existe un usuario con el mismo correo electrónico");
+        return false;
+    }
+
+    // Si todas las verificaciones son exitosas, retorna true
+    return true;
+}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel derecha1;

@@ -164,14 +164,21 @@ public class Login extends javax.swing.JFrame {
 
         String Email=this.jtxtEmail.getText();
         String Pass=this.jtxtPass.getText();
-        
-        MenuPrincipal Mp=new MenuPrincipal();
-        Mp.setEmail(jtxtEmail.getText());
+       
         
         CarritoCompras.setCorreo(jtxtEmail.getText());
-        Cliente cl=new Cliente(Email, Pass);
-        cl.InicioSeionDB();
-        this.dispose();
+    // Crear una instancia de la clase Cliente con los datos ingresados
+        Cliente cliente = new Cliente(Email, Pass);
+
+        // Iniciar sesión en la base de datos
+        cliente.InicioSeionDB();
+                Catalogo catalogo = new Catalogo();
+        
+        // Hacer visible el JFrame "Catalogo"
+        catalogo.setVisible(true);
+        
+        // Ocultar el JFrame actual "Carrito"
+        setVisible(false);
 
     }//GEN-LAST:event_jbtnIniciarSesionActionPerformed
 

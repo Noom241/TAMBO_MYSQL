@@ -4,7 +4,9 @@
  */
 package com.mycompany.tambo_mysql;
 
+
 import Resources.CarritoCompras;
+import Resources.Producto;
 import SQL.Conexion;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,30 +14,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 /**
+ * Clase que representa la interfaz de un catálogo de productos con funcionalidad de carrito de compras.
  *
  * @author Segov
  */
-
-
 public class Catalogo extends javax.swing.JFrame {
 
+    private final ArrayList<Producto> productosList = new ArrayList<>();
+    private int totalPages;
+    private int currentPage = 1;
+    private int contadorProductosAñadidos = 0;
+
     /**
-     * Creates new form Catalogo
+     * Constructor de la clase Catalogo.
      */
-    private int paginaActual = 1;
-    private int productosPorPagina = 4;
-    private String consulta = "SELECT * FROM PRODUCTO";
-    
     public Catalogo() {
         initComponents();
         cargarProductos();
-        paginaActual = 1;
-        productosPorPagina = 4;
+        cargarListadoPaginas();
+        actualizarPaginaActual();
     }
 
     /**
@@ -48,55 +49,32 @@ public class Catalogo extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btnAnterior = new javax.swing.JButton();
-        btnSiguiente = new javax.swing.JButton();
         labelImagen1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         btn_añadir1 = new javax.swing.JButton();
-        btn_comprar1 = new javax.swing.JButton();
         labelPrecio1 = new javax.swing.JLabel();
         labelNombre1 = new javax.swing.JLabel();
         labelImagen2 = new javax.swing.JLabel();
         btn_añadir2 = new javax.swing.JButton();
-        btn_comprar2 = new javax.swing.JButton();
         labelPrecio2 = new javax.swing.JLabel();
         labelNombre2 = new javax.swing.JLabel();
         labelImagen3 = new javax.swing.JLabel();
         btn_añadir3 = new javax.swing.JButton();
-        btn_comprar3 = new javax.swing.JButton();
         labelPrecio3 = new javax.swing.JLabel();
         labelNombre3 = new javax.swing.JLabel();
         labelImagen4 = new javax.swing.JLabel();
         btn_añadir4 = new javax.swing.JButton();
-        btn_comprar4 = new javax.swing.JButton();
         labelPrecio4 = new javax.swing.JLabel();
         labelNombre4 = new javax.swing.JLabel();
-        txtBusqueda = new javax.swing.JTextField();
         list_box = new javax.swing.JComboBox<>();
-        btn_ir = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        count_products = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(176, 18, 129));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        btnAnterior.setText("Anterior");
-        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAnteriorActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnAnterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, -1, -1));
-
-        btnSiguiente.setText("Siguiente");
-        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSiguienteActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnSiguiente, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, -1, -1));
 
         labelImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/images/test.png"))); // NOI18N
         jPanel1.add(labelImagen1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, -1));
@@ -111,9 +89,6 @@ public class Catalogo extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btn_añadir1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, -1, -1));
-
-        btn_comprar1.setText("COMPRAR");
-        jPanel1.add(btn_comprar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, -1, -1));
 
         labelPrecio1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         labelPrecio1.setForeground(new java.awt.Color(204, 204, 204));
@@ -136,9 +111,6 @@ public class Catalogo extends javax.swing.JFrame {
         });
         jPanel1.add(btn_añadir2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 320, -1, -1));
 
-        btn_comprar2.setText("COMPRAR");
-        jPanel1.add(btn_comprar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, -1, -1));
-
         labelPrecio2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         labelPrecio2.setForeground(new java.awt.Color(204, 204, 204));
         labelPrecio2.setText("10.99");
@@ -159,9 +131,6 @@ public class Catalogo extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btn_añadir3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 560, -1, -1));
-
-        btn_comprar3.setText("COMPRAR");
-        jPanel1.add(btn_comprar3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 530, -1, -1));
 
         labelPrecio3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         labelPrecio3.setForeground(new java.awt.Color(204, 204, 204));
@@ -184,9 +153,6 @@ public class Catalogo extends javax.swing.JFrame {
         });
         jPanel1.add(btn_añadir4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 560, -1, -1));
 
-        btn_comprar4.setText("COMPRAR");
-        jPanel1.add(btn_comprar4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 530, -1, -1));
-
         labelPrecio4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         labelPrecio4.setForeground(new java.awt.Color(204, 204, 204));
         labelPrecio4.setText("10.99");
@@ -197,13 +163,6 @@ public class Catalogo extends javax.swing.JFrame {
         labelNombre4.setText("Hamburguesa");
         jPanel1.add(labelNombre4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 360, -1, -1));
 
-        txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBusquedaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, 250, -1));
-
         list_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1" }));
         list_box.setToolTipText("");
         list_box.addItemListener(new java.awt.event.ItemListener() {
@@ -213,21 +172,17 @@ public class Catalogo extends javax.swing.JFrame {
         });
         jPanel1.add(list_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 30, 50, -1));
 
-        btn_ir.setText("IR");
-        btn_ir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_irActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btn_ir, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 50, -1));
-
         jButton1.setText("Carrito");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 30, -1, -1));
+
+        count_products.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        count_products.setText("0");
+        jPanel1.add(count_products, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 20, 20, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -243,40 +198,9 @@ public class Catalogo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
-        cargarProductosPaginaAnterior();
-    }//GEN-LAST:event_btnAnteriorActionPerformed
-
-    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
-        cargarProductosPaginaSiguiente();
-    }//GEN-LAST:event_btnSiguienteActionPerformed
-
     private void list_boxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_list_boxItemStateChanged
-        //paginaActual = cargar_box();
-        //cargarProductos();
+        cargarListadoPaginas();
     }//GEN-LAST:event_list_boxItemStateChanged
-
-    private void btn_irActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_irActionPerformed
-        ocultarElementos();
-        paginaActual = cargar_box();
-        
-        cargarProductos();
-    }//GEN-LAST:event_btn_irActionPerformed
-
-    private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
-        ocultarElementos();
-        paginaActual = 1;
-        String texto = txtBusqueda.getText();
-        System.out.println(texto);
-        if(texto == ""){
-            consulta = "SELECT * FROM PRODUCTO";
-        }
-        else{
-            consulta = "SELECT * FROM PRODUCTO WHERE Producto LIKE '%" + texto + "%'";
-        }
-        
-        cargarProductos();        // TODO add your handling code here:
-    }//GEN-LAST:event_txtBusquedaActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Carrito carrito = new Carrito();
@@ -309,7 +233,7 @@ public class Catalogo extends javax.swing.JFrame {
             
         }
         
-
+        actualizarContadorProductos();
         // Llamar a la función para mostrar los productos en el carrito en la consola
         mostrarProductosEnCarrito();
     }//GEN-LAST:event_btn_añadir1ActionPerformed
@@ -336,6 +260,7 @@ public class Catalogo extends javax.swing.JFrame {
             cantidades.add(1);
         }
         // Llamar a la función para mostrar los productos en el carrito en la consola
+        actualizarContadorProductos();
         mostrarProductosEnCarrito();        
     }//GEN-LAST:event_btn_añadir2ActionPerformed
 
@@ -360,7 +285,7 @@ public class Catalogo extends javax.swing.JFrame {
             CarritoCompras.agregarProducto(nombre, precio);
             cantidades.add(1);
         }
-        // Llamar a la función para mostrar los productos en el carrito en la consola
+        actualizarContadorProductos();
         mostrarProductosEnCarrito();             // TODO add your handling code here:
     }//GEN-LAST:event_btn_añadir3ActionPerformed
 
@@ -385,7 +310,7 @@ public class Catalogo extends javax.swing.JFrame {
             CarritoCompras.agregarProducto(nombre, precio);
             cantidades.add(1);
         }  
-        // Llamar a la función para mostrar los productos en el carrito en la consola
+        actualizarContadorProductos();// Llamar a la función para mostrar los productos en el carrito en la consola
         mostrarProductosEnCarrito();              // TODO add your handling code here:
     }//GEN-LAST:event_btn_añadir4ActionPerformed
 
@@ -425,17 +350,11 @@ public class Catalogo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAnterior;
-    private javax.swing.JButton btnSiguiente;
     private javax.swing.JButton btn_añadir1;
     private javax.swing.JButton btn_añadir2;
     private javax.swing.JButton btn_añadir3;
     private javax.swing.JButton btn_añadir4;
-    private javax.swing.JButton btn_comprar1;
-    private javax.swing.JButton btn_comprar2;
-    private javax.swing.JButton btn_comprar3;
-    private javax.swing.JButton btn_comprar4;
-    private javax.swing.JButton btn_ir;
+    private javax.swing.JLabel count_products;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
@@ -452,68 +371,34 @@ public class Catalogo extends javax.swing.JFrame {
     private javax.swing.JLabel labelPrecio3;
     private javax.swing.JLabel labelPrecio4;
     private javax.swing.JComboBox<String> list_box;
-    private javax.swing.JTextField txtBusqueda;
     // End of variables declaration//GEN-END:variables
 
-    
-private void cargarProductos() {
-    try (Connection con = Conexion.getConexion()) {
-        
-        Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        ResultSet rs = stmt.executeQuery(consulta);
-        
-        int primerProducto = (paginaActual - 1) * productosPorPagina + 1;
-        rs.absolute(primerProducto);
-        int totalPaginas = (int) Math.ceil((double) obtenerTotalProductos() / productosPorPagina);
-        int contador = 1;
-        System.out.println("Total de productos: " + obtenerTotalProductos());
-        System.out.println("Total de páginas: " + totalPaginas);
-        cargar_box_b();
-        
-        while (contador <= 4) {
-            String nombre = rs.getString("Producto");
-            double precio = rs.getDouble("Precio");
-            ImageIcon imagen = new ImageIcon("ruta_imagenes/" + nombre + ".jpg");
+     private void cargarProductos() {
+        int startIndex = (currentPage - 1) * 4; // Índice de inicio para la página actual
+        int endIndex = startIndex + 4; // Índice de fin para la página actual
 
-            switch (contador) {
-                case 1:
-                    labelNombre1.setText(nombre);
-                    labelPrecio1.setText(String.valueOf(precio));
-                    //labelImagen1.setIcon(imagen);
-                    break;
-                case 2:
-                    labelNombre2.setText(nombre);
-                    labelPrecio2.setText(String.valueOf(precio));
-                    //labelImagen2.setIcon(imagen);
-                    break;
-                case 3:
-                    labelNombre3.setText(nombre);
-                    labelPrecio3.setText(String.valueOf(precio));
-                    //labelImagen3.setIcon(imagen);
-                    break;
-                case 4:
-                    labelNombre4.setText(nombre);
-                    labelPrecio4.setText(String.valueOf(precio));
-                    //labelImagen4.setIcon(imagen);
-                    break;
+        try (Connection connection = Conexion.getConexion();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT Producto, Precio FROM PRODUCTO")) {
+
+            int index = 0;
+            while (resultSet.next()) {
+                if (index >= startIndex && index < endIndex) {
+                    String nombre = resultSet.getString("Producto");
+                    double precio = resultSet.getDouble("Precio");
+                    productosList.add(new Producto(nombre, precio));
+                }
+                index++;
             }
-            
-            contador++;
-            if(rs.getRow() < obtenerTotalProductos()){
-                rs.next();
-            }
-            else{
-                
-            }
-            
+
+        } catch (SQLException e) {
         }
-        mostrarElementos();
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
+        mostrarProductosEnConsola();
+        mostrarProductos();
     }
-}
 
+     
+     
 public void mostrarProductosEnCarrito() {
     List<String> nombresProductos = CarritoCompras.getNombresProductos();
     List<Double> preciosProductos = CarritoCompras.getPreciosProductos();
@@ -525,131 +410,90 @@ public void mostrarProductosEnCarrito() {
     }
 }
 
-
-private int cargar_box(){
-    String seleccion = (String) list_box.getSelectedItem();
-    int valorSeleccionado = Integer.parseInt(seleccion);
-    return valorSeleccionado;
-}
-
-private void cargar_box_b(){
-    list_box.removeAllItems();
-
-        // Agregar las opciones al JComboBox
-    for (int i = 1; i <= (int) Math.ceil((double) obtenerTotalProductos() / productosPorPagina); i++) {
-        list_box.addItem(String.valueOf(i));
-    }
-}
-
-
-private void cargarProductosPaginaAnterior() {
-    if (paginaActual > 1) {
-        paginaActual--;
-        ocultarElementos();
-        cargarProductos();
-    }
-}
-
-
-
-
-private void cargarProductosPaginaSiguiente() {
-    
-    int totalProductos = obtenerTotalProductos();
-    int totalPaginas = (int) Math.ceil((double) totalProductos / productosPorPagina);
-    if (paginaActual < totalPaginas) {
-        paginaActual++;
-        ocultarElementos();
-        cargarProductos();
-    }
-}
-
-private int obtenerTotalProductos() {
-    
-    try (Connection con = Conexion.getConexion()) {
-        Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery(consulta);
-        int contador = 0;
-        while (rs.next()) {
-            contador++;
+    private void mostrarProductos() {
+        int index = 0;
+        for (Producto producto : productosList) {
+            switch (index) {
+                case 0:
+                    labelNombre1.setText(producto.getNombre());
+                    labelPrecio1.setText(String.valueOf(producto.getPrecio()));
+                    break;
+                case 1:
+                    labelNombre2.setText(producto.getNombre());
+                    labelPrecio2.setText(String.valueOf(producto.getPrecio()));
+                    break;
+                case 2:
+                    labelNombre3.setText(producto.getNombre());
+                    labelPrecio3.setText(String.valueOf(producto.getPrecio()));
+                    break;
+                case 3:
+                    labelNombre4.setText(producto.getNombre());
+                    labelPrecio4.setText(String.valueOf(producto.getPrecio()));
+                    break;
+                default:
+                    break;
+            }
+            index++;
         }
-        return contador;
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-    return 0;
+    private void mostrarProductosEnConsola() {
+    System.out.println("Productos:");
+
+    for (int index = 0; index < productosList.size(); index++) {
+        Producto producto = productosList.get(index);
+        System.out.println("Nombre: " + producto.getNombre() + ", Precio: " + producto.getPrecio());
+    }
 }
 
-private void hacerInvisibleLabel(JLabel label) {
-    label.setVisible(false);
-}
 
-private void hacerInvisibleButton(JButton button) {
-    button.setVisible(false);
-}
-private void hacerVisibleLabel(JLabel label) {
-    label.setVisible(true);
-}
+    /**
+     * Actualiza los productos mostrados en el JFrame cuando se cambia de página.
+     */
+    private void actualizarPaginaActual() {
+        productosList.clear();
+        cargarProductos();
+        // También puedes actualizar la etiqueta que muestra la página actual si es necesario.
+    }
 
-private void hacerVisibleButton(JButton button) {
-    button.setVisible(true);
-}
+    /**
+     * Carga las opciones de páginas disponibles en el JComboBox.
+     */
+    private void cargarListadoPaginas() {
+        try (Connection connection = Conexion.getConexion();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) AS total FROM productos")) {
 
-public void ocultarElementos() {
-    hacerInvisibleLabel(labelNombre1);
-    hacerInvisibleLabel(labelNombre2);
-    hacerInvisibleLabel(labelNombre3);
-    hacerInvisibleLabel(labelNombre4);
+            if (resultSet.next()) {
+                int totalProductos = resultSet.getInt("total");
+                totalPages = (int) Math.ceil(totalProductos / 4.0);
+                // Llenar la lista desplegable con los números de página disponibles
+                DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+                for (int i = 1; i <= totalPages; i++) {
+                    model.addElement("Página " + i);
+                }
+                list_box.setModel(model);
 
-    hacerInvisibleLabel(labelPrecio1);
-    hacerInvisibleLabel(labelPrecio2);
-    hacerInvisibleLabel(labelPrecio3);
-    hacerInvisibleLabel(labelPrecio4);
+                // Agregar ActionListener para la lista desplegable
+                list_box.addActionListener(e -> {
+                    JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+                    String selectedPage = (String) comboBox.getSelectedItem();
+                    int selectedPageIndex = Integer.parseInt(selectedPage.substring(7)); // Obtener el número de página
+                    currentPage = selectedPageIndex;
+                    actualizarPaginaActual();
+                });
+            }
 
-    hacerInvisibleLabel(labelImagen1);
-    hacerInvisibleLabel(labelImagen2);
-    hacerInvisibleLabel(labelImagen3);
-    hacerInvisibleLabel(labelImagen4);
+        } catch (SQLException e) {
+        }
+    }
 
-    hacerInvisibleButton(btn_comprar1);
-    hacerInvisibleButton(btn_comprar2);
-    hacerInvisibleButton(btn_comprar3);
-    hacerInvisibleButton(btn_comprar4);
-
-    hacerInvisibleButton(btn_añadir1);
-    hacerInvisibleButton(btn_añadir2);
-    hacerInvisibleButton(btn_añadir3);
-    hacerInvisibleButton(btn_añadir4);
-}
-
-public void mostrarElementos() {
-    hacerVisibleLabel(labelNombre1);
-    hacerVisibleLabel(labelNombre2);
-    hacerVisibleLabel(labelNombre3);
-    hacerVisibleLabel(labelNombre4);
-
-    hacerVisibleLabel(labelPrecio1);
-    hacerVisibleLabel(labelPrecio2);
-    hacerVisibleLabel(labelPrecio3);
-    hacerVisibleLabel(labelPrecio4);
-
-    hacerVisibleLabel(labelImagen1);
-    hacerVisibleLabel(labelImagen2);
-    hacerVisibleLabel(labelImagen3);
-    hacerVisibleLabel(labelImagen4);
-
-    hacerVisibleButton(btn_comprar1);
-    hacerVisibleButton(btn_comprar2);
-    hacerVisibleButton(btn_comprar3);
-    hacerVisibleButton(btn_comprar4);
-
-    hacerVisibleButton(btn_añadir1);
-    hacerVisibleButton(btn_añadir2);
-    hacerVisibleButton(btn_añadir3);
-    hacerVisibleButton(btn_añadir4);
-}
-
+    /**
+     * Actualiza el contador de productos añadidos al carrito en la interfaz.
+     */
+    private void actualizarContadorProductos() {
+        contadorProductosAñadidos++;
+        count_products.setText(String.valueOf(contadorProductosAñadidos));
+    }
 
 
 

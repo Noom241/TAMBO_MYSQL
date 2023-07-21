@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Historial_Compras {
     
-    public static void guardarCompra(String dniCliente, List<String> nombresProductos, List<Double> preciosProductos) {
+    public static void guardarCompra(String dniCliente, List<String> nombresProductos, List<Double> preciosProductos) throws SQLException {
         // Obtener la conexión a la base de datos
         Connection connection = Conexion.getConexion();
         if (connection == null) {
@@ -24,30 +24,28 @@ public class Historial_Compras {
             // Crear la consulta SQL para insertar en la tabla "HistorialCompras"
             String sql = "INSERT INTO HistorialCompras (DNI_CLIENTE, Producto, Precio) VALUES (?, ?, ?)";
             
-            // Preparar la declaración SQL
-            PreparedStatement statement = connection.prepareStatement(sql);
-            
             // Recorrer las listas de nombres y precios
-            for (int i = 0; i < nombresProductos.size(); i++) {
-                String nombre = nombresProductos.get(i);
-                double precio = preciosProductos.get(i);
-                
-                // Establecer los parámetros en la consulta SQL
-                statement.setString(1, dniCliente);
-                statement.setString(2, nombre);
-                statement.setDouble(3, precio);
-                
-                // Ejecutar la consulta SQL
-                statement.executeUpdate();
+            try ( // Preparar la declaración SQL
+                    PreparedStatement statement = connection.prepareStatement(sql)) {
+                // Recorrer las listas de nombres y precios
+                for (int i = 0; i < nombresProductos.size(); i++) {
+                    String nombre = nombresProductos.get(i);
+                    double precio = preciosProductos.get(i);
+                    
+                    // Establecer los parámetros en la consulta SQL
+                    statement.setString(1, dniCliente);
+                    statement.setString(2, nombre);
+                    statement.setDouble(3, precio);
+                    
+                    // Ejecutar la consulta SQL
+                    statement.executeUpdate();
+                }
+                // Cerrar la declaración
             }
-            
-            // Cerrar la declaración
-            statement.close();
             
             // Cerrar la conexión a la base de datos
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

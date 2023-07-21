@@ -72,48 +72,37 @@ public class Cliente {
         }  
     }
     
-    void InicioSeionDB(){
-//        if(Email.isEmpty()|| Pass.isEmpty()){
-//            JOptionPane.showMessageDialog(null, "Debes rellenar ambos los campos");
-//        }else{
-//            
-            String url="SELECT * "+"FROM CLIENTE WHERE Email='"+Email+"'and Pass='"+Pass+"'";
-            try{
-               Connection con=Conexion.getConexion();
-               PreparedStatement ps=con.prepareStatement(url); //Precompila la consulta de SQL
-               ResultSet rs=ps.executeQuery();
-               
-               if(rs.next()){
-                   //Si existe el Email
-                   String em=rs.getString("Email");
-                   String pa=rs.getString("Pass");
-                   
-                   if(Pass.equals(pa)){
-                       //Si la contraseña es igual, se redirecciona a siguiente proceso
-                       
-                       JOptionPane.showMessageDialog(null, "Bienvenido");
-                       
-                       Login Lg=new Login();
-                       Lg.setVisible(false);
-                       
-                       Catalogo Menu=new Catalogo();
-                       Menu.setVisible(true);
-                       Menu.setLocationRelativeTo(null);
-  
-                   }else{
-                       JOptionPane.showMessageDialog(null, "La contraseña es incorrecta");
-                   }
-               }else{
-                   //El Email no existe
-                    JOptionPane.showMessageDialog(null, "El correo electrónico no está registrado");
-               }
-               
-               
-            }catch(SQLException ex){
-                JOptionPane.showMessageDialog(null, toString());
+    void InicioSeionDB() {
+        String query = "SELECT * FROM CLIENTE WHERE Email = ? AND Pass = ?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, Email);
+            ps.setString(2, Pass);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Si existe el Email y la contraseña es correcta
+                String em = rs.getString("Email");
+                String pa = rs.getString("Pass");
+
+                if (Pass.equals(pa)) {
+                    // Si la contraseña es igual, se redirecciona a siguiente proceso
+                    JOptionPane.showMessageDialog(null, "Bienvenido");
+
+                    // Si deseas realizar alguna operación con el cliente autenticado, puedes hacerlo aquí
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "La contraseña es incorrecta");
+                }
+            } else {
+                // El Email no existe o la contraseña no coincide
+                JOptionPane.showMessageDialog(null, "El correo electrónico no está registrado o la contraseña es incorrecta");
             }
-            
-            
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString());
         }
-//    }
+    }
 }
