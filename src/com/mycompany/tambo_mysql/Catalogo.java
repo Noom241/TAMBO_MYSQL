@@ -170,6 +170,11 @@ public class Catalogo extends javax.swing.JFrame {
                 list_boxItemStateChanged(evt);
             }
         });
+        list_box.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                list_boxActionPerformed(evt);
+            }
+        });
         jPanel1.add(list_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 30, 50, -1));
 
         jButton1.setText("Carrito");
@@ -314,6 +319,16 @@ public class Catalogo extends javax.swing.JFrame {
         mostrarProductosEnCarrito();              // TODO add your handling code here:
     }//GEN-LAST:event_btn_añadir4ActionPerformed
 
+    private void list_boxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_boxActionPerformed
+    // Get the selected page from the JComboBox
+    String selectedPage = (String) list_box.getSelectedItem();
+    int selectedPageIndex = Integer.parseInt(selectedPage.substring(7)); // Extract the page number
+
+    // Update the current page and refresh the displayed products
+    currentPage = selectedPageIndex;
+    actualizarPaginaActual();       // TODO add your handling code here:
+    }//GEN-LAST:event_list_boxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -342,10 +357,8 @@ public class Catalogo extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Catalogo().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Catalogo().setVisible(true);
         });
     }
 
@@ -375,6 +388,7 @@ public class Catalogo extends javax.swing.JFrame {
 
      private void cargarProductos() {
         int startIndex = (currentPage - 1) * 4; // Índice de inicio para la página actual
+        System.out.println("PAginaaa " + ((currentPage - 1) * 4));
         int endIndex = startIndex + 4; // Índice de fin para la página actual
 
         try (Connection connection = Conexion.getConexion();
@@ -437,12 +451,13 @@ public void mostrarProductosEnCarrito() {
         }
     }
     private void mostrarProductosEnConsola() {
-    System.out.println("Productos:");
+    System.out.println("Productos:###########################");
 
     for (int index = 0; index < productosList.size(); index++) {
         Producto producto = productosList.get(index);
         System.out.println("Nombre: " + producto.getNombre() + ", Precio: " + producto.getPrecio());
     }
+    System.out.println("Productos:-----------------------------");
 }
 
 
@@ -458,34 +473,37 @@ public void mostrarProductosEnCarrito() {
     /**
      * Carga las opciones de páginas disponibles en el JComboBox.
      */
-    private void cargarListadoPaginas() {
-        try (Connection connection = Conexion.getConexion();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) AS total FROM productos")) {
+private void cargarListadoPaginas() {
+    try (Connection connection = Conexion.getConexion();
+         Statement statement = connection.createStatement();
+         ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) AS total FROM PRODUCTO")) {
 
-            if (resultSet.next()) {
-                int totalProductos = resultSet.getInt("total");
-                totalPages = (int) Math.ceil(totalProductos / 4.0);
-                // Llenar la lista desplegable con los números de página disponibles
-                DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-                for (int i = 1; i <= totalPages; i++) {
-                    model.addElement("Página " + i);
-                }
-                list_box.setModel(model);
-
-                // Agregar ActionListener para la lista desplegable
-                list_box.addActionListener(e -> {
-                    JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
-                    String selectedPage = (String) comboBox.getSelectedItem();
-                    int selectedPageIndex = Integer.parseInt(selectedPage.substring(7)); // Obtener el número de página
-                    currentPage = selectedPageIndex;
-                    actualizarPaginaActual();
-                });
+        if (resultSet.next()) {
+            int totalProductos = resultSet.getInt("total");
+            totalPages = (int) Math.ceil(totalProductos / 4.0);
+            
+            // Actualizar el JComboBox con los números de página disponibles
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            for (int i = 1; i <= totalPages; i++) {
+                model.addElement("Página " + i);
             }
-
-        } catch (SQLException e) {
+            list_box.removeActionListener(list_box.getActionListeners()[0]);
+            list_box.setModel(model);
+            
+            // Agregar el ActionListener actualizado para la lista desplegable
+            list_box.addActionListener(e -> {
+                JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+                String selectedPage = (String) comboBox.getSelectedItem();
+                int selectedPageIndex = Integer.parseInt(selectedPage.substring(7)); // Obtener el número de página
+                currentPage = selectedPageIndex;
+                actualizarPaginaActual();
+            });
         }
+
+    } catch (SQLException e) {
     }
+}
+
 
     /**
      * Actualiza el contador de productos añadidos al carrito en la interfaz.
